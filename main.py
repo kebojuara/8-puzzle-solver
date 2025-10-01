@@ -12,32 +12,29 @@ def setGoalState(state):
     goal_state = state
 
 
-euclid_counter = manhattan_counter = 0
+manhattan_counter = 0
 tiles_out_of_place_counter = 0
-gbfs_manhattan_counter = gbfs_euclid_counter = 0
+gbfs_manhattan_counter = 0
 gbfs_tiles_out_of_place_counter = 0
 
-euclid_path = manhattan_path = []
+manhattan_path = []
 tiles_out_of_place_path = []
-gbfs_manhattan_path = gbfs_euclid_path = []
+gbfs_manhattan_path = []
 gbfs_tiles_out_of_place_path = []
 
-euclid_cost = manhattan_cost = 0
+manhattan_cost = 0
 tiles_out_of_place_cost = 0
-gbfs_manhattan_cost = gbfs_euclid_cost = 0
+gbfs_manhattan_cost = 0
 gbfs_tiles_out_of_place_cost = 0
 
-euclid_depth = manhattan_depth = 0
+manhattan_depth = 0
 tiles_out_of_place_depth = 0
 gbfs_manhattan_depth = 0
-gbfs_euclid_depth = 0
 gbfs_tiles_out_of_place_depth = 0
 
-time_euclid = 0
 time_manhattan = 0
 time_tiles_out_of_place = 0
 time_gbfs_manhattan = 0
-time_gbfs_euclid = 0
 time_gbfs_tiles_out_of_place = 0
 
 
@@ -109,18 +106,6 @@ def getManhattanDistance(state):
     return tot
 
 
-def getEuclideanDistance(state):
-    tot = 0
-    global goal_state
-    for i in range(1, 9):
-        goal_idx = goal_state.index(str(i))
-        goalX, goalY = divmod(goal_idx, 3)
-        idx = state.index(str(i))
-        itemX, itemY = divmod(idx, 3)
-        tot += math.sqrt((goalX - itemX) ** 2 + (goalY - itemY) ** 2)
-    return tot
-
-
 def getTilesOutOfPlace(state):
     misplaced_tiles = 0
     global goal_state
@@ -175,54 +160,6 @@ def AStarSearch_manhattan(inputState):
     manhattan_path = []
     manhattan_counter = len(explored)
     time_manhattan = float(time.time() - start_time)
-    return 0
-
-
-def AStarSearch_euclid(inputState):
-    start_time = time.time()
-    integer_state = int(inputState)
-    heap = []
-    explored = {}
-    parent = {}
-    cost_map = {}
-    heapq.heappush(heap, (getEuclideanDistance(inputState), integer_state))
-    cost_map[integer_state] = getEuclideanDistance(inputState)
-    heap_map = {integer_state: 1}
-    global euclid_counter, euclid_path, euclid_cost, euclid_depth, time_euclid
-    euclid_depth = 0
-    while heap:
-        node = heapq.heappop(heap)
-        state = node[1]
-        string_state = getStringRepresentation(state)
-        parent_cost = node[0] - getEuclideanDistance(string_state)
-        if not state in explored:
-            euclid_depth = max(parent_cost, euclid_depth)
-        explored[state] = 1
-        if goalTest(state):
-            path = getPath(parent, inputState)
-            euclid_path = path
-            euclid_counter = len(explored)
-            euclid_cost = len(path) - 1
-            time_euclid = float(time.time() - start_time)
-            return 1
-        children = getChildren(string_state)
-        for child in children:
-            new_cost = getEuclideanDistance(child)
-            child_int = int(child)
-            if child_int not in explored and child_int not in heap_map:
-                heapq.heappush(heap, (parent_cost + new_cost + 1, child_int))
-                heap_map[child_int] = 1
-                cost_map[child_int] = parent_cost + new_cost + 1
-                parent[child_int] = state
-            elif child_int in heap_map:
-                if (new_cost + parent_cost + 1) < cost_map[child_int]:
-                    parent[child_int] = state
-                    cost_map[child_int] = new_cost + parent_cost + 1
-                    heapq.heappush(heap, (parent_cost + 1 + new_cost, child_int))
-    euclid_cost = 0
-    euclid_path = []
-    euclid_counter = len(explored)
-    time_euclid = float(time.time() - start_time)
     return 0
 
 
@@ -314,49 +251,6 @@ def GreedyBestFirstSearch_manhattan(inputState):
     gbfs_manhattan_path = []
     gbfs_manhattan_counter = len(explored)
     time_gbfs_manhattan = float(time.time() - start_time)
-    return 0
-
-
-def GreedyBestFirstSearch_euclid(inputState):
-    start_time = time.time()
-    integer_state = int(inputState)
-    heap = []
-    explored = {}
-    parent = {}
-    g_cost_map = {}
-    h_n = getEuclideanDistance(inputState)
-    heapq.heappush(heap, (h_n, integer_state))
-    g_cost_map[integer_state] = 0
-    global gbfs_euclid_counter, gbfs_euclid_path, gbfs_euclid_cost, gbfs_euclid_depth, time_gbfs_euclid
-    gbfs_euclid_depth = 0
-    while heap:
-        node = heapq.heappop(heap)
-        state = node[1]
-        string_state = getStringRepresentation(state)
-        if state in explored:
-            continue
-        explored[state] = 1
-        current_g_cost = g_cost_map[state]
-        gbfs_euclid_depth = max(gbfs_euclid_depth, current_g_cost)
-        if goalTest(state):
-            path = getPath(parent, inputState)
-            gbfs_euclid_path = path
-            gbfs_euclid_counter = len(explored)
-            gbfs_euclid_cost = len(path) - 1
-            time_gbfs_euclid = float(time.time() - start_time)
-            return 1
-        children = getChildren(string_state)
-        for child in children:
-            child_int = int(child)
-            if child_int not in explored:
-                h_n_child = getEuclideanDistance(child)
-                heapq.heappush(heap, (h_n_child, child_int))
-                parent[child_int] = state
-                g_cost_map[child_int] = current_g_cost + 1
-    gbfs_euclid_cost = 0
-    gbfs_euclid_path = []
-    gbfs_euclid_counter = len(explored)
-    time_gbfs_euclid = float(time.time() - start_time)
     return 0
 
 
