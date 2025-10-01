@@ -1,5 +1,7 @@
 # 8-Puzzle Solver
 
+<img width="599" height="434" alt="image" src="https://github.com/user-attachments/assets/aac22d46-f949-4f90-bf9f-93f44779804a" />
+
 This project is a **Graphical User Interface (GUI) based solver for the 8-Puzzle problem**.
 
 It uses different search algorithms (**A\*** and **Greedy Best First Search**) combined with two popular heuristics (**Manhattan Distance** and **Tiles Out of Place**) to find the optimal or near-optimal solution path from an initial state to a goal state.
