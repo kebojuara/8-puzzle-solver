@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import messagebox, simpledialog
@@ -67,8 +66,8 @@ class InterfaceApp:
 
         self.algorithmbox = ttk.Combobox(self.appFrame)
         self.algorithmbox.configure(cursor="hand2", state="readonly",
-                                    values=('A* Manhattan', 'A* Euclidean', 'A* Tiles Out of Place',
-                                            'GBFS Manhattan', 'GBFS Euclidean', 'GBFS Tiles Out of Place'))
+                                    values=('A* Manhattan', 'A* Tiles Out of Place',
+                                            'GBFS Manhattan', 'GBFS Tiles Out of Place'))
         self.algorithmbox.place(anchor="center", height=30, width=150, x=700, y=150)
         self.algorithmbox.bind("<<ComboboxSelected>>", self.selectAlgorithm)
 
@@ -253,8 +252,6 @@ class InterfaceApp:
         h = 0
         if 'Manhattan' in algorithm:
             h = main.getManhattanDistance(state)
-        elif 'Euclidean' in algorithm:
-            h = main.getEuclideanDistance(state)
         elif 'Tiles Out of Place' in algorithm:
             h = main.getTilesOutOfPlace(state)
 
@@ -311,10 +308,6 @@ class InterfaceApp:
             main.AStarSearch_manhattan(initialState)
             path, cost, counter, depth, runtime = \
                 main.manhattan_path, main.manhattan_cost, main.manhattan_counter, main.manhattan_depth, main.time_manhattan
-        elif str(algorithm) == 'A* Euclidean':
-            main.AStarSearch_euclid(initialState)
-            path, cost, counter, depth, runtime = \
-                main.euclid_path, main.euclid_cost, main.euclid_counter, round(main.euclid_depth), main.time_euclid
         elif str(algorithm) == 'A* Tiles Out of Place':
             main.AStarSearch_tiles_out_of_place(initialState)
             path, cost, counter, depth, runtime = \
@@ -323,10 +316,6 @@ class InterfaceApp:
             main.GreedyBestFirstSearch_manhattan(initialState)
             path, cost, counter, depth, runtime = \
                 main.gbfs_manhattan_path, main.gbfs_manhattan_cost, main.gbfs_manhattan_counter, main.gbfs_manhattan_depth, main.time_gbfs_manhattan
-        elif str(algorithm) == 'GBFS Euclidean':
-            main.GreedyBestFirstSearch_euclid(initialState)
-            path, cost, counter, depth, runtime = \
-                main.gbfs_euclid_path, main.gbfs_euclid_cost, main.gbfs_euclid_counter, main.gbfs_euclid_depth, main.time_gbfs_euclid
         elif str(algorithm) == 'GBFS Tiles Out of Place':
             main.GreedyBestFirstSearch_tiles_out_of_place(initialState)
             path, cost, counter, depth, runtime = \
